@@ -1,0 +1,43 @@
+1. [NUC] Start ROS master on NUC - 
+		
+		roscore
+
+2. [NUC] SSH into turtlebot PI3
+
+		ssh ubuntu@192.168.100.50
+		PW: ubuntu
+
+3. [PI3] Launch turtlebot core and lidar on PI3
+
+		roslaunch turtlebot3_bringup turtlebot3_robot.launch
+
+4. [NUC] MODEL: Launch robot_state_publisher and rviz
+
+		roslaunch turtlebot3_bringup turtlebot3_remote.launch
+		rosrun rviz rviz -d `rospack find turtlebot3_description`/rviz/model.rviz
+
+   [NUC] MAPPING: Launch SLAM packages
+		 
+		GMAPPING:	roslaunch turtlebot3_slam turtlebot3_slam.launch slam_methods:=gmapping
+
+		CARTOGRAPHER:	roslaunch turtlebot3_slam turtlebot3_slam.launch slam_methods:=cartographer
+
+		rosrun map_server map_saver -f ~/map
+
+5. [NUC] TELEOP: Launch the teleoperation.
+
+		roslaunch turtlebot3_teleop turtlebot3_teleop_key.launch 
+
+6. [NUC] CAMERA: Launch raspberry pi camera
+		
+		roslaunch raspicam_node camerav2_1280x960_10fps.launch enable_raw:=true
+		rqt_image_view
+
+6. [NUC] To recompile after making changes
+
+		catkin_make_isolated --install --use-ninja
+
+7. [NUC] NAVIGATION: Launch navigation node 
+		
+		roslaunch turtlebot3_navigation turtlebot3_navigation.launch map_file:=$HOME/map.yaml
+
