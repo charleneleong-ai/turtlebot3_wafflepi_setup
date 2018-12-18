@@ -113,28 +113,27 @@ If there is a WiFi network (hotspot) with Internet available for remote PC and R
 1.  Switch RPI3 Wireless AP to new WiFi network. See [here](https://learn.ubiquityrobotics.com/connect_network) for more details.
 
 	*[RPI3]*  Look for available SSIDs and connect
-
-    ```bash
+	
+	```bash
     $ pifi list seen
     <return list of SSIDS>
     $ sudo pifi add <SSID> <password>
     $ sudo reboot
     ```
-
     The RPI3 should now automatically try to connect to the WiFi network instead of AP mode upon reboot. If something goes wrong (eg. wrong passwd), reboot RPI3 and try again, it will reappear in AP mode.
+    
+2.  Connect remote PC to WiFi network and ssh into RPI3 from remote PC
 
-2. Connect remote PC to WiFi network and ssh into RPI3 from remote PC
-
-	*[RPI3] \[Remote PC]*
-
+    *[RPI3] \[Remote PC]*
+   
     ```bash
     $ sudo apt-get install chrony
     $ sudo ntpdate ntp.ubuntu.com
     ```
 
     If ntpdate is not installed on RPI3 - `sudo apt-get install ntpdate`
-
-3. Update RPI3, this may take some time since it may have been awhile since the original image was made.
+    
+3.  Update RPI3, this may take some time since it may have been awhile since the original image was made.
 
     *[RPI3]*
 
@@ -143,10 +142,10 @@ If there is a WiFi network (hotspot) with Internet available for remote PC and R
     $ sudo apt-get upgrade
     ```
 
-4. If errors occur due to outdated packages on RPI3, remove packages all packages from the catkin workspace and remake from latest sources
+4.  If errors occur due to outdated packages on RPI3, remove packages all packages from the catkin workspace and remake from latest sources
 
     *[RPI3]*
-
+    
     ```bash
     $ sudo rm -r ~/catkin_ws/src/*`
     $ cd ~/catkin_ws/src
@@ -158,19 +157,20 @@ If there is a WiFi network (hotspot) with Internet available for remote PC and R
     $ sudo apt-get install ros-kinetic-rosserial-python ros-kinetic-tf
     $ source /opt/ros/kinetic/setup.bash
     $ cd ~/catkin_ws && catkin_make -j1
-   ```
-
+    ```
+    
 
 ##### 2.2.2 OFFLINE
 
-1. Set up an NTP server on remote PC and NTP client on RPI3 to connect to NTP server to sync the time between them. See [here](http://www.ubuntugeek.com/install-and-configure-network-time-protocol-ntp-serverclients-on-ubuntu-16-04-server.html) for more details.
+1.  Set up an NTP server on remote PC and NTP client on RPI3 to connect to NTP server to sync the time between them. See [here](http://www.ubuntugeek.com/install-and-configure-network-time-protocol-ntp-serverclients-on-ubuntu-16-04-server.html) for more details.
 
-    - `sudo ntpdate 10.42.0.XX`  (on RPI3)
-    - If ntpdate is not installed on RPI3, you must install from ntp source, SCP the repo to Turtlebot3 and build. See [here](http://support.ntp.org/bin/view/Main/SoftwareDevelopment#NTP_Source_Code_Repositories) for more details. 
+    `sudo ntpdate 10.42.0.XX`  (on RPI3)
 
-2. Update RPI3, this may take some time since it may have been awhile since the original image was made.
+    If ntpdate is not installed on RPI3, you must install from ntp source, SCP the repo to Turtlebot3 and build. See [here](http://support.ntp.org/bin/view/Main/SoftwareDevelopment#NTP_Source_Code_Repositories) for more details. 
 
-    - update apt offline (see [here](https://www.ostechnix.com/fully-update-upgrade-offline-debian-based-systems/) for details) to update on remote PC and transfer back to RPI3 using USB drive
+2.  Update RPI3, this may take some time since it may have been awhile since the original image was made.
+
+    Update apt offline (see [here](https://www.ostechnix.com/fully-update-upgrade-offline-debian-based-systems/) for details) to update on remote PC and transfer back to RPI3 using USB drive
 
 3. If errors occur due to outdated packages on RPI3, remove packages all packages from the catkin workspace and remake from latest sources 
 
@@ -181,7 +181,7 @@ If there is a WiFi network (hotspot) with Internet available for remote PC and R
     ```
 
     *[Remote PC]* Clone packages from latest sources on remote PC and SCP to RPI3
-
+   
     ```bash
     $ cd ~/ && mkdir turtlebot3_pkgs && cd turtlebot3_pkgs
     $ git clone https://github.com/ROBOTIS-GIT/hls_lfcd_lds_driver.git
@@ -192,9 +192,9 @@ If there is a WiFi network (hotspot) with Internet available for remote PC and R
     $ sudo rm -r rosserial/ rosserial_arduino/ rosserial_client/ rosserial_embeddedlinux/ rosserial_mbed/ rosserial_server/ rosserial_tivac/ rosserial_vex_cortex/ rosserial_vex_v5/ rosserial_windows/ rosserial_xbee/
     $ scp -Cpvr ~/turtlebot3_pkgs/* ubuntu@turtlebot3.local:~/catkin_ws/src/
     ```
-
+   
     *[RPI3]*
-
+   
     ```bash
     $ cd ~/catkin_ws/src
     $ ls
@@ -215,7 +215,7 @@ Change the `ROS_MASTER_URI` and `ROS_HOSTNAME` on remote PC and RPI3 must to mat
 
 ##### 2.3.1 [Remote PC]
 
-1. Get IP address of WiFi network
+1.  Get IP address of WiFi network
 
     ```bash
     $ ifconfig
@@ -251,40 +251,37 @@ Change the `ROS_MASTER_URI` and `ROS_HOSTNAME` on remote PC and RPI3 must to mat
               RX bytes:4585801 (4.5 MB)  TX bytes:174740559 (174.7 MB)
     ```
 
-2. Modify `~/.bashrc` file to update terminal environment 
+2.  Modify `~/.bashrc` file to update terminal environment 
+    - Press <kbd>alt</kbd> + <kbd>/</kbd> to reach end of line and modify `localhost` to appropriate IP 
+    - Add `export TURTLEBOT3_MODEL=waffle_pi` to set the turtlebot model
+    - ** ROS runs on Python 2, therefore if Anaconda is installed on remote PC, comment out PATH variable due to python 3 and python 2 conflicts. 
+    - Your  `~/.bashrc` file should look similar to below 
 
     ```bash
     $ sudo nano ~/.bashrc
     ```
-
-     - Press <kbd>alt</kbd> + <kbd>/</kbd> to reach end of line and modify `localhost` to appropriate IP 
-     - Add `export TURTLEBOT3_MODEL=waffle_pi` to set the turtlebot model
-     - ** ROS runs on Python 2, therefore if Anaconda is installed on remote PC, comment out PATH variable due to python 3 and python 2 conflicts. 
     
-	 Your  `~/.bashrc` file should look similar to below 
-
     ```bash
     source /opt/ros/kinetic/setup.bash
     source ~/catkin_ws/devel/setup.bash
-
-
+    
     export ROS_MASTER_URI=http://10.42.0.52:11311
     export ROS_HOSTNAME=10.42.0.52
-
+    
     export TURTLEBOT3_MODEL=waffle_pi
-
+    
     export PYTHONPATH=$PYTHONPATH:/usr/lib/python2.7/dist-packages
-
+    
     #export PATH=/home/charlene/apps/anaconda3/bin:$PATH
     ```
 
-3. Source the `~/.bashrc` file 
+3.  Source the `~/.bashrc` file 
 
     ```bash
     $ source ~/.bashrc
     ```
 
-4. Reboot remote PC
+4.  Reboot remote PC
 
 
 
