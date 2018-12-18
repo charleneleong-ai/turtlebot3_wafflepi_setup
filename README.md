@@ -10,7 +10,7 @@
         </div></td>
     </tr></table>
 
-![Kitten](imgs/turtlebot3.png){ : width=600 style="float; padding:16px" }
+
 
 
 ## Requirements
@@ -110,33 +110,33 @@ The Turtlebot3 RPI3 image are based on Ubuntu 16.04 installed with ROS Kinetic a
 
 If there is a WiFi network (hotspot) with Internet available for remote PC and RPI3 to connect to, it makes updating packages and syncing time a much simpler process and in general mitigates potential errors.  
 
-1. Switch RPI3 Wireless AP to new WiFi network. See [here](https://learn.ubiquityrobotics.com/connect_network) for more details.
+1.  Switch RPI3 Wireless AP to new WiFi network. See [here](https://learn.ubiquityrobotics.com/connect_network) for more details.
 
-   *[RPI3]* Look for available SSIDs and connect
+	*[RPI3]* Look for available SSIDs and connect
 
-   ```bash
-   $ pifi list seen
-   <return list of SSIDS>
-   $ sudo pifi add <SSID> <password>
-   $ sudo reboot
-   ```
+    ```bash
+    $ pifi list seen
+    <return list of SSIDS>
+    $ sudo pifi add <SSID> <password>
+    $ sudo reboot
+    ```
 
-   The RPI3 should now automatically try to connect to the WiFi network instead of AP mode upon reboot. If something goes wrong (eg. wrong passwd), reboot RPI3 and try again, it will reappear in AP mode.
+    The RPI3 should now automatically try to connect to the WiFi network instead of AP mode upon reboot. If something goes wrong (eg. wrong passwd), reboot RPI3 and try again, it will reappear in AP mode.
 
 2. Connect remote PC to WiFi network and ssh into RPI3 from remote PC
 
-   *[RPI3] \[Remote PC]*
+	*[RPI3] \[Remote PC]*
 
-   ```bash
-   $ sudo apt-get install chrony
-   $ sudo ntpdate ntp.ubuntu.com
-   ```
+    ```bash
+    $ sudo apt-get install chrony
+    $ sudo ntpdate ntp.ubuntu.com
+    ```
 
    If ntpdate is not installed on RPI3 - `sudo apt-get install ntpdate`
 
 3. Update RPI3, this may take some time since it may have been awhile since the original image was made.
 
-   * [RPI3]*
+   [RPI3]*
 
    ```bash
    $ sudo apt-get update
