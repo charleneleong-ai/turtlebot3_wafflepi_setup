@@ -10,7 +10,7 @@
         </div></td>
     </tr></table>
 
-
+![Kitten](imgs/turtlebot3.png){ : width=600 style="float; padding:16px" }
 
 
 ## Requirements
@@ -136,7 +136,7 @@ If there is a WiFi network (hotspot) with Internet available for remote PC and R
 
 3. Update RPI3, this may take some time since it may have been awhile since the original image was made.
 
-   *[RPI3]*
+   * [RPI3]*
 
    ```bash
    $ sudo apt-get update
