@@ -257,11 +257,11 @@ Change the `ROS_MASTER_URI` and `ROS_HOSTNAME` on remote PC and RPI3 must to mat
     $ sudo nano ~/.bashrc
     ```
 
-    - Press <kbd>alt</kbd> + <kbd>/</kbd> to reach end of line and modify `localhost` to appropriate IP 
-    - Add `export TURTLEBOT3_MODEL=waffle_pi` to set the turtlebot model
-    - ** ROS runs on Python 2, therefore if Anaconda is installed on remote PC, comment out PATH variable due to python 3 and python 2 conflicts. 
-
-    Your  `~/.bashrc` file should look similar to below 
+     - Press <kbd>alt</kbd> + <kbd>/</kbd> to reach end of line and modify `localhost` to appropriate IP 
+     - Add `export TURTLEBOT3_MODEL=waffle_pi` to set the turtlebot model
+     - ** ROS runs on Python 2, therefore if Anaconda is installed on remote PC, comment out PATH variable due to python 3 and python 2 conflicts. 
+    
+	 Your  `~/.bashrc` file should look similar to below 
 
     ```bash
     source /opt/ros/kinetic/setup.bash
