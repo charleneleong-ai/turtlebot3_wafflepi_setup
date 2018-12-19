@@ -98,6 +98,7 @@ $ sudo apt-get install ros-kinetic-joy ros-kinetic-teleop-twist-joy ros-kinetic-
 $ cd ~/catkin_ws/src/
 $ git clone https://github.com/ROBOTIS-GIT/turtlebot3_msgs.git
 $ git clone https://github.com/ROBOTIS-GIT/turtlebot3.git
+$ git clone https://github.com/ROBOTIS-GIT/turtlebot3_simulations.git
 $ cd ~/catkin_ws && catkin_make
 ```
 
@@ -123,9 +124,9 @@ The Turtlebot3 RPI3 image are based on Ubuntu 16.04 installed with ROS Kinetic a
 
 #### 2.2 Update OpenCR
 
-The OpenCR board must be updated with latest firmware. See [here](http://emanual.robotis.com/docs/en/platform/turtlebot3/opencr_setup/#opencr-firmware-upload-for-tb3) for details.
+Connect the OpenCR board to remote PC or RPI3 to update with latest firmware. See [here](http://emanual.robotis.com/docs/en/platform/turtlebot3/opencr_setup/#opencr-firmware-upload-for-tb3) for details.
 
-*[RPI3]*
+*[RPI3] \[Remote PC]*
 
 ```bash
 $ export OPENCR_PORT=/dev/ttyACM0
@@ -134,7 +135,7 @@ $ rm -rf ./opencr_update.tar.bz2
 $ wget https://github.com/ROBOTIS-GIT/OpenCR-Binaries/raw/master/turtlebot3/ROS1/latest/opencr_update.tar.bz2 && tar -xvf opencr_update.tar.bz2 && cd ./opencr_update && ./update.sh $OPENCR_PORT $OPENCR_MODEL.opencr && cd ..
 ```
 
-If the shell script fails, you may manually update OpenCR firmware using Arduino, see [here](http://emanual.robotis.com/docs/en/platform/turtlebot3/opencr_setup/#opencr-firmware-upload-for-tb3) for details.
+If the shell script fails or if RPI3 is offline, you can manually update OpenCR firmware using Arduino, see [here](http://emanual.robotis.com/docs/en/platform/turtlebot3/opencr_setup/#opencr-firmware-upload-for-tb3) for details.
 
 
 
@@ -373,15 +374,11 @@ Change the `ROS_MASTER_URI` and `ROS_HOSTNAME` on remote PC and RPI3 must to mat
 
 1. Start ROS master on remote PC.
 
-    *[Remote PC]*
-
     ```bash
     $ roscore
     ```
 
 2. Connect to RPI3 (see [[2.1](#21-connect-to-turtlebot3-wafflepi)]) and launch Turtlebot core and LIDAR.
-
-    *[RPI3]*
 
     ```bash
     $ roslaunch turtlebot3_bringup turtlebot3_robot.launch
@@ -389,16 +386,12 @@ Change the `ROS_MASTER_URI` and `ROS_HOSTNAME` on remote PC and RPI3 must to mat
 
 3. [Optional] Launch robot_state_publisher and RViz.
 
-    *[Remote PC]*
-
     ```bash
     $ roslaunch turtlebot3_bringup turtlebot3_remote.launch
     $ rosrun rviz rviz -d `rospack find turtlebot3_description`/rviz/model.rviz
     ```
 
 4. Launch teleoperation.
-
-    *[Remote PC]*
 
     ```bash
     $ roslaunch turtlebot3_teleop turtlebot3_teleop_key.launch
@@ -410,8 +403,6 @@ Change the `ROS_MASTER_URI` and `ROS_HOSTNAME` on remote PC and RPI3 must to mat
 1. Launch remote control (see [[3](#3-remote-control)]).
 
 2. Launch Gmapping package (default).
-
-    *[Remote PC]*
 
     ```bash
     $ roslaunch turtlebot3_slam turtlebot3_slam.launch slam_methods:=gmapping
@@ -435,19 +426,54 @@ Change the `ROS_MASTER_URI` and `ROS_HOSTNAME` on remote PC and RPI3 must to mat
 
 2. Launch navigation stack.
 
-   *[Remote PC]*
+    ```bash
+    $ roslaunch turtlebot3_navigation turtlebot3_navigation.launch map_file:=$HOME/catkin_Ws/src/map.yaml
+    ```
 
-   ```bash
-   $ roslaunch turtlebot3_navigation turtlebot3_navigation.launch map_file:=$HOME/catkin_Ws/src/map.yaml
-   ```
+    Please modify map file path to that of your own map. The map of Enoshima meeting room is included in this repo for your use.
 
-   Please modify map file path to that of your own map. The map of Enoshima meeting room is included in this repo for your use.
+3. Estimate initial pose (starting point) of the robot by clicking the [2D Pose Estimate] button in RViz placing it in the approximate position of Turtlebot3 in map.
 
-3. Estimate initial pose (starting point) of the robot in the map. 
+    <div style="width:image width px; font-size:80%; text-align:center;">
+    <img src="imgs/nav_stack.jpeg" width="600"/></div>
+
+    When this process is completed, the robot estimates its actual position and orientation by using the position and orientation specified by the green arrow as the initial pose. Every green arrow stands for an expected position of TurtleBot3. The laser scanner will draw approximate figures of wall on the map.
+
+4. Set a navigation goal by clicking the [2D Nav Goal] button in RViz. The robot willl create a path to avoid obstacles to its destination based on the map. 
+
+    <div style="width:image width px; font-size:80%; text-align:center;">
+    <img src="imgs/2d_nav_goal.png" width="1200"/></div>
+
+    To further tune the navigation stack, please refer to the [ROS Wiki](http://wiki.ros.org/navigation/Tutorials/Navigation%20Tuning%20Guide) or a [more detailed guide](http://kaiyuzheng.me/documents/navguide.pdf) by Kaiyu Zheng.
 
 
 
 ### 6. Simulation
 
-<div style="width:image width px; font-size:80%; text-align:center;">
-<img src="imgs/nav_stack.jpeg" width="600"/></div>
+1. Launch the virtual robot from the turtlebot3_simulations package.
+
+    ```bash
+    $ roslaunch turtlebot3_fake turtlebot3_fake.launch
+    ```
+
+2. Launch the robot in a world in Gazebo of your choice.
+
+    ```bash
+    $ roslaunch turtlebot3_gazebo turtlebot3_empty_world.launch
+    $ roslaunch turtlebot3_gazebo turtlebot3_world.launch
+    $ roslaunch turtlebot3_gazebo turtlebot3_house.launch
+    ```
+
+3. Drive Turtlebot3.
+
+    ```bash
+    $ roslaunch turtlebot3_teleop turtlebot3_teleop_key.launch
+    ```
+
+4. Execute RViz.
+
+    ```bash
+    $ roslaunch turtlebot3_gazebo turtlebot3_gazebo_rviz.launch
+    ```
+
+    You are able to launch [SLAM](#4-slam) or [navigation](#5-navigation-stack) in the virtual worlds if you wish.
