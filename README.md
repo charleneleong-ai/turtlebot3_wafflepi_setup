@@ -47,6 +47,9 @@
 
 6. [Simulation](#6-simulation)
 
+-------
+
+
 
 ### 1. Remote PC Setup
 
@@ -404,25 +407,11 @@ Change the `ROS_MASTER_URI` and `ROS_HOSTNAME` on remote PC and RPI3 must to mat
 
 ### 4. SLAM
 
-1. Start ROS master on remote PC.
+1. Launch remote control (see [[3](#3-remote-control)]).
+
+2. Launch Gmapping package (default).
 
     *[Remote PC]*
-
-    ```bash
-    $ roscore
-    ```
-
-2. Connect to RPI3 (see [[2.1](#21-connect-to-rpi3)]) and launch Turtlebot core and LIDAR.
-
-    *[RPI3]*
-
-    ```bash
-    $ roslaunch turtlebot3_bringup turtlebot3_robot.launch
-    ```
-
-3. Launch Gmapping package (default).
-
-    *[RPI3]*
 
     ```bash
     $ roslaunch turtlebot3_slam turtlebot3_slam.launch slam_methods:=gmapping
@@ -430,8 +419,33 @@ Change the `ROS_MASTER_URI` and `ROS_HOSTNAME` on remote PC and RPI3 must to mat
 
     If you wish to launch other mapping packages, see [here](http://emanual.robotis.com/docs/en/platform/turtlebot3/slam/#run-slam-nodes) for details.
 
+3. Save your map.
+
+    ```bash
+    $ rosrun map_server map_saver -f ~/catkin_ws/src/
+    ```
+
+    You may also record and play back your map run for the the future. See [here](http://wiki.ros.org/ROS/Tutorials/Recording%20and%20playing%20back%20data) for more detail. 
+
+    Please refer the respective mapping packages ROS Wiki for further tuning guidelines.
 
 ### 5. Navigation Stack
+
+1. Launch remote control (see [[3](#3-remote-control)]).
+
+2. Launch navigation stack.
+
+   *[Remote PC]*
+
+   ```bash
+   $ roslaunch turtlebot3_navigation turtlebot3_navigation.launch map_file:=$HOME/catkin_Ws/src/map.yaml
+   ```
+
+   Please modify map file path to that of your own map. The map of Enoshima meeting room is included in this repo for your use.
+
+3. Estimate initial pose (starting point) of the robot in the map. 
+
+
 
 ### 6. Simulation
 
