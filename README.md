@@ -11,8 +11,6 @@
     </tr></table>
 
 
-
-
 ## Requirements
 
 - Turtlebot3 WafflePi ([assembled](http://emanual.robotis.com/docs/en/platform/turtlebot3/hardware_setup/#assembly-manual))
